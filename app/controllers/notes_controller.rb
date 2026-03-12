@@ -1,14 +1,23 @@
 class NotesController < ApplicationController
   def index
-    if params[:search]
-      notes = Note.where("title ILIKE ?", "%#{params[:search]}%")
-    else
-      notes = Note.all
-    end
+    # if params[:search]
+    #   notes = Note.where("title ILIKE ?", "%#{params[:search]}%")
+    # else
+    #   notes = Note.all
+    # end
+    page = params[:page] || 1
+    per_page = 5
+
+    notes = Note.page(page).per(per_page)
+
     render json: {
       status: "success",
+      page: page,
+      per_page: per_page,
+      total_pages: notes.total_pages,
+      total_count: notes.total_count,
       data: notes
-    }, status: :ok
+    }
   end
 
   def show
