@@ -1,6 +1,10 @@
 class NotesController < ApplicationController
   def index
-    notes = Note.all
+    if params[:search]
+      notes = Note.where("title ILIKE ?", "%#{params[:search]}%")
+    else
+      notes = Note.all
+    end
     render json: {
       status: "success",
       data: notes
